@@ -3,6 +3,7 @@ import { Container, Form, Button, Row, Col, Card, Alert, Table } from 'react-boo
 
 const SummerPremierLeagueForm = () => {
   const [formData, setFormData] = useState({
+    name: '', // ✅ Added name field
     email: '',
     file: null,
     village: '',
@@ -15,7 +16,6 @@ const SummerPremierLeagueForm = () => {
   const [players, setPlayers] = useState([]);
   const [errors, setErrors] = useState({});
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [formDisabled, setFormDisabled] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
 
@@ -42,6 +42,10 @@ const SummerPremierLeagueForm = () => {
     let valid = true;
     const newErrors = {};
 
+    if (!formData.name) {
+      newErrors.name = 'Name is required!';
+      valid = false;
+    }
     if (!formData.email) {
       newErrors.email = 'Email is required!';
       valid = false;
@@ -131,6 +135,7 @@ const SummerPremierLeagueForm = () => {
 
     // ✅ Clear form after submission
     setFormData({
+      name: '',
       email: '',
       file: null,
       village: '',
@@ -141,7 +146,6 @@ const SummerPremierLeagueForm = () => {
     });
 
     setPaymentSuccess(false); // Reset payment status for next submission
-    setFormDisabled(true);
   };
 
   // Admin Login Handler
@@ -183,6 +187,19 @@ const SummerPremierLeagueForm = () => {
                   </h2>
 
                   <Form onSubmit={handleSubmit}>
+                    {/* Name */}
+                    <Form.Group className="mb-3">
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        isInvalid={!!errors.name}
+                      />
+                      <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                    </Form.Group>
+
                     {/* Email */}
                     <Form.Group className="mb-3">
                       <Form.Label>Email</Form.Label>
@@ -219,15 +236,33 @@ const SummerPremierLeagueForm = () => {
                         isInvalid={!!errors.village}
                       >
                         <option value="">Choose...</option>
-                        <option value="Village1">Village 1</option>
-                        <option value="Village2">Village 2</option>
+                        <option value="Bhavaram">Bhavaram</option>
+                        <option value="Govindpuram">Govindpuram</option>
+                        <option value="Gollalugunta">Gollalugunta</option>
+                        <option value="Gurrapalem">Gurrapalem</option>
+                        <option value="Iripaka">Iripaka</option>
+                        <option value="Jaggampeta">Jaggampeta</option>
+                        <option value="Katravulapalli">Katravulapalli</option>
+                        <option value="Kothuru">Kothuru</option>
+                        <option value="Mallepalli">Mallepalli</option>
+                        <option value="Manyavaripalem">Manyavaripalem</option>
+                        <option value="Maripaka">Maripaka</option>
+                        <option value="Mallisala">Mallisala</option>
+                        <option value="Mavidada">Mavidada</option>
+                        <option value="Nagaram">Nagaram</option>
+                        <option value="Neeladriraopeta">Neeladriraopeta</option>
+                        <option value="Rajapudi">Rajapudi</option>
+                        <option value="Talluru">Talluru</option>
+                        <option value="Thimmapuram">Thimmapuram</option>
+                        <option value="Vengayammapuram">Vengayammapuram</option>
                       </Form.Select>
                       <Form.Control.Feedback type="invalid">{errors.village}</Form.Control.Feedback>
                     </Form.Group>
 
+
                     {/* Mobile */}
                     <Form.Group className="mb-3">
-                      <Form.Label>Mobile Number</Form.Label>
+                      <Form.Label>Mobile</Form.Label>
                       <Form.Control
                         type="text"
                         name="mobile"
@@ -250,15 +285,15 @@ const SummerPremierLeagueForm = () => {
                         <option value="">Choose...</option>
                         <option value="Batsman">Batsman</option>
                         <option value="Bowler">Bowler</option>
+                        <option value="All-Rounder">All-Rounder</option>
+                        <option value="Wicket Keeper">Wicket Keeper</option>
                       </Form.Select>
-                      <Form.Control.Feedback type="invalid">
-                        {errors.specialization}
-                      </Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.specialization}</Form.Control.Feedback>
                     </Form.Group>
 
                     {/* Jersey Name */}
                     <Form.Group className="mb-3">
-                      <Form.Label>Name on Jersey & Number</Form.Label>
+                      <Form.Label>Jersey Name</Form.Label>
                       <Form.Control
                         type="text"
                         name="jerseyName"
@@ -266,107 +301,37 @@ const SummerPremierLeagueForm = () => {
                         onChange={handleChange}
                         isInvalid={!!errors.jerseyName}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.jerseyName}
-                      </Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.jerseyName}</Form.Control.Feedback>
                     </Form.Group>
 
                     {/* T-Shirt Size */}
                     <Form.Group className="mb-3">
                       <Form.Label>T-Shirt Size</Form.Label>
-                      <div className="d-flex gap-3 flex-wrap">
-                        {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                          <Form.Check
-                            key={size}
-                            type="radio"
-                            label={size}
-                            name="tShirtSize"
-                            value={size}
-                            checked={formData.tShirtSize === size}
-                            onChange={handleChange}
-                            isInvalid={!!errors.tShirtSize}
-                          />
-                        ))}
-                      </div>
-                      {errors.tShirtSize && <div className="text-danger">{errors.tShirtSize}</div>}
+                      <Form.Select
+                        name="tShirtSize"
+                        value={formData.tShirtSize}
+                        onChange={handleChange}
+                        isInvalid={!!errors.tShirtSize}
+                      >
+                        <option value="">Choose...</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">{errors.tShirtSize}</Form.Control.Feedback>
                     </Form.Group>
 
-                    {/* Buttons */}
-                    <div className="d-grid gap-2">
-                      <Button variant="success" type="submit">
-                        Pay & Submit Form
-                      </Button>
-                    </div>
+                    {/* Submit Button */}
+                    <Button variant="primary" type="submit" className="mt-3 w-100">
+                      Pay ₹300 & Register
+                    </Button>
                   </Form>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
-
-          {/* Admin Login */}
-          {/* {!isAdmin && (
-            <Row className="justify-content-center mt-5">
-              <Col md={6}>
-                <Card className="p-4 shadow-sm">
-                  <h5 className="text-center mb-3">🔒 Admin Login</h5>
-                  <Form.Group className="mb-3">
-                    <Form.Control
-                      type="password"
-                      placeholder="Enter Admin Password"
-                      value={adminPassword}
-                      onChange={(e) => setAdminPassword(e.target.value)}
-                    />
-                  </Form.Group>
-                  <div className="d-grid">
-                    <Button variant="primary" onClick={handleAdminLogin}>
-                      Login as Admin
-                    </Button>
-                  </div>
-                </Card>
-              </Col>
-            </Row>
-          )} */}
-
-          {/* Player List Table for Admin */}
-          {isAdmin && (
-            <Row className="justify-content-center mt-5">
-              <Col md={10}>
-                <h4 className="text-center mb-3">🏏 Registered Players</h4>
-                <Table striped bordered hover responsive>
-                  <thead>
-                    <tr>
-                      <th>Email</th>
-                      <th>Village</th>
-                      <th>Mobile</th>
-                      <th>Specialization</th>
-                      <th>Jersey Name</th>
-                      <th>T-Shirt Size</th>
-                      <th>Payment Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {players.map((player) => (
-                      <tr key={player.id}>
-                        <td>{player.email}</td>
-                        <td>{player.village}</td>
-                        <td>{player.mobile}</td>
-                        <td>{player.specialization}</td>
-                        <td>{player.jerseyName}</td>
-                        <td>{player.tShirtSize}</td>
-                        <td
-                          className={`text-${
-                            player.paymentStatus === 'Success' ? 'success' : 'danger'
-                          }`}
-                        >
-                          {player.paymentStatus}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </Col>
-            </Row>
-          )}
         </>
       )}
     </Container>
